@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Festival Greetings</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 25%, #ffecd2 50%, #fcb69f 75%, #ff6a88 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .screen {
+            display: none;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .screen.active {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* Input Screen Styles */
+        .input-container {
+            perspective: 1000px;
+        }
+
+        .title {
+            font-size: clamp(1.5rem, 5vw, 2.5rem);
+            color: #fff;
+            margin-bottom: 40px;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+            animation: fadeInDown 1s ease;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .name-input {
+            width: 100%;
+            max-width: 300px;
+            padding: 15px 25px;
+            font-size: 1.2rem;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50px;
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            color: #fff;
+            text-align: center;
+            outline: none;
+            transition: all 0.3s ease;
+            box-shadow: 
+                0 8px 32px rgba(255, 105, 180, 0.3),
+                inset 0 0 20px rgba(255, 255, 255, 0.2);
+        }
+
+        .name-input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .name-input:focus {
+            background: rgba(255, 255, 255, 0.35);
+            border-color: rgba(255, 255, 255, 0.5);
+            box-shadow: 
+                0 8px 32px rgba(255, 105, 180, 0.5),
+                inset 0 0 30px rgba(255, 255, 255, 0.3),
+                0 0 40px rgba(255, 20, 147, 0.4);
+            transform: scale(1.05);
+        }
+
+        /* 3D Text Styles */
+        .text-3d-container {
+            perspective: 1000px;
+            margin: 60px 0;
+        }
+
+        .text-3d {
+            font-size: clamp(2rem, 8vw, 3.5rem);
+            font-weight: bold;
+            padding: 40px 60px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border-radius: 30px;
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 
+                0 15px 50px rgba(255, 20, 147, 0.4),
+                inset 0 0 40px rgba(255, 255, 255, 0.2),
+                0 0 80px rgba(255, 105, 180, 0.3);
+            animation: rotate3d 4s ease-in-out infinite, bubbleFloat 3s ease-in-out infinite;
+            transform-style: preserve-3d;
+            position: relative;
+        }
+
+        .text-3d::before {
+            content: '';
+            position: absolute;
+            top: 10%;
+            left: 10%;
+            width: 30%;
+            height: 30%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.6), transparent);
+            border-radius: 50%;
+            filter: blur(15px);
+            animation: shimmer 2s ease-in-out infinite;
+        }
+
+        .text-3d.bhogi {
+            background: linear-gradient(135deg, rgba(255, 182, 193, 0.3), rgba(255, 105, 180, 0.3));
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            color: #fff;
+            text-shadow: 
+                2px 2px 4px rgba(255, 20, 147, 0.5),
+                0 0 20px rgba(255, 105, 180, 0.8);
+        }
+
+        .text-3d.sankranti {
+            background: linear-gradient(135deg, rgba(255, 192, 203, 0.3), rgba(255, 20, 147, 0.3));
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            color: #fff;
+            text-shadow: 
+                2px 2px 4px rgba(255, 20, 147, 0.5),
+                0 0 20px rgba(255, 192, 203, 0.8);
+        }
+
+        .text-3d.kanuma {
+            background: linear-gradient(135deg, rgba(255, 228, 225, 0.3), rgba(219, 112, 147, 0.3));
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            color: #fff;
+            text-shadow: 
+                2px 2px 4px rgba(219, 112, 147, 0.5),
+                0 0 20px rgba(255, 182, 193, 0.8);
+        }
+
+        @keyframes rotate3d {
+            0%, 100% {
+                transform: perspective(1000px) rotateY(-20deg) rotateX(10deg) translateZ(0);
+            }
+            50% {
+                transform: perspective(1000px) rotateY(20deg) rotateX(-10deg) translateZ(50px);
+            }
+        }
+
+        @keyframes bubbleFloat {
+            0%, 100% {
+                box-shadow: 
+                    0 15px 50px rgba(255, 20, 147, 0.4),
+                    inset 0 0 40px rgba(255, 255, 255, 0.2),
+                    0 0 80px rgba(255, 105, 180, 0.3);
+            }
+            50% {
+                box-shadow: 
+                    0 25px 70px rgba(255, 20, 147, 0.6),
+                    inset 0 0 60px rgba(255, 255, 255, 0.4),
+                    0 0 100px rgba(255, 105, 180, 0.5);
+            }
+        }
+
+        @keyframes shimmer {
+            0%, 100% {
+                opacity: 0.4;
+                transform: translate(0, 0);
+            }
+            50% {
+                opacity: 0.8;
+                transform: translate(10px, 10px);
+            }
+        }
+
+        /* Button Styles */
+        .btn {
+            margin-top: 40px;
+            padding: 15px 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            border-radius: 50px;
+            background: linear-gradient(135deg, rgba(255, 105, 180, 0.4), rgba(255, 20, 147, 0.4));
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 
+                0 10px 30px rgba(255, 20, 147, 0.4),
+                inset 0 0 20px rgba(255, 255, 255, 0.2);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            background: linear-gradient(135deg, rgba(255, 105, 180, 0.6), rgba(255, 20, 147, 0.6));
+            box-shadow: 
+                0 15px 40px rgba(255, 20, 147, 0.6),
+                inset 0 0 30px rgba(255, 255, 255, 0.3),
+                0 0 50px rgba(255, 105, 180, 0.5);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        /* Final Screen Styles */
+        .final-name-container {
+            perspective: 1000px;
+            margin: 40px 0;
+        }
+
+        .glass-name {
+            font-size: clamp(2.5rem, 10vw, 5rem);
+            font-weight: bold;
+            padding: 50px 70px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.25), rgba(255, 192, 203, 0.2));
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+            border-radius: 30px;
+            border: 3px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 
+                0 20px 60px rgba(255, 20, 147, 0.4),
+                inset 0 0 40px rgba(255, 255, 255, 0.3),
+                0 0 100px rgba(255, 105, 180, 0.4);
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 8px;
+            animation: glassFloat 3s ease-in-out infinite, glow 2s ease-in-out infinite alternate;
+            transform-style: preserve-3d;
+            position: relative;
+            text-shadow: 
+                2px 2px 8px rgba(255, 20, 147, 0.6),
+                0 0 30px rgba(255, 105, 180, 0.8);
+        }
+
+        .glass-name::before {
+            content: '';
+            position: absolute;
+            top: 15%;
+            left: 15%;
+            width: 40%;
+            height: 40%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.7), transparent);
+            border-radius: 50%;
+            filter: blur(20px);
+            animation: bubbleShine 3s ease-in-out infinite;
+        }
+
+        .glass-name::after {
+            content: '';
+            position: absolute;
+            bottom: 10%;
+            right: 10%;
+            width: 25%;
+            height: 25%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.5), transparent);
+            border-radius: 50%;
+            filter: blur(15px);
+            animation: bubbleShine 3s ease-in-out infinite 1s;
+        }
+
+        @keyframes glassFloat {
+            0%, 100% {
+                transform: perspective(1000px) translateY(0) rotateX(8deg) rotateY(-5deg) translateZ(0);
+            }
+            25% {
+                transform: perspective(1000px) translateY(-15px) rotateX(10deg) rotateY(8deg) translateZ(30px);
+            }
+            50% {
+                transform: perspective(1000px) translateY(0) rotateX(8deg) rotateY(0deg) translateZ(50px);
+            }
+            75% {
+                transform: perspective(1000px) translateY(-15px) rotateX(10deg) rotateY(-8deg) translateZ(30px);
+            }
+        }
+
+        @keyframes glow {
+            from {
+                box-shadow: 
+                    0 20px 60px rgba(255, 20, 147, 0.4),
+                    inset 0 0 40px rgba(255, 255, 255, 0.3),
+                    0 0 100px rgba(255, 105, 180, 0.4);
+            }
+            to {
+                box-shadow: 
+                    0 30px 80px rgba(255, 20, 147, 0.6),
+                    inset 0 0 60px rgba(255, 255, 255, 0.5),
+                    0 0 120px rgba(255, 105, 180, 0.7);
+            }
+        }
+
+        @keyframes bubbleShine {
+            0%, 100% {
+                opacity: 0.5;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.9;
+                transform: scale(1.2);
+            }
+        }
+
+        .quote-container {
+            margin-top: 50px;
+            perspective: 1000px;
+        }
+
+        .quote {
+            font-size: clamp(1rem, 3vw, 1.4rem);
+            color: rgba(255, 255, 255, 0.95);
+            font-style: italic;
+            line-height: 1.8;
+            max-width: 500px;
+            padding: 35px 40px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 192, 203, 0.1));
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border-radius: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 
+                0 15px 40px rgba(255, 20, 147, 0.3),
+                inset 0 0 30px rgba(255, 255, 255, 0.2);
+            animation: quoteFade 2s ease 0.5s both;
+        }
+
+        .quote::before {
+            content: '"';
+            font-size: 4rem;
+            color: rgba(255, 105, 180, 0.6);
+            position: absolute;
+            top: -20px;
+            left: 20px;
+        }
+
+        .quote::after {
+            content: '"';
+            font-size: 4rem;
+            color: rgba(255, 105, 180, 0.6);
+            position: absolute;
+            bottom: -40px;
+            right: 20px;
+        }
+
+        @keyframes quoteFade {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Decorative Elements */
+        .decorative-dots {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: -1;
+        }
+
+        .dot {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.4);
+            box-shadow: 0 0 20px rgba(255, 182, 193, 0.6);
+            border-radius: 50%;
+            animation: floatDot 6s ease-in-out infinite;
+        }
+
+        .dot:nth-child(1) { top: 10%; left: 10%; animation-delay: 0s; }
+        .dot:nth-child(2) { top: 20%; left: 80%; animation-delay: 1s; width: 15px; height: 15px; }
+        .dot:nth-child(3) { top: 60%; left: 15%; animation-delay: 2s; width: 8px; height: 8px; }
+        .dot:nth-child(4) { top: 70%; left: 85%; animation-delay: 3s; }
+        .dot:nth-child(5) { top: 40%; left: 5%; animation-delay: 4s; width: 12px; height: 12px; }
+        .dot:nth-child(6) { top: 80%; left: 50%; animation-delay: 5s; }
+        .dot:nth-child(7) { top: 30%; left: 90%; animation-delay: 1.5s; width: 6px; height: 6px; }
+        .dot:nth-child(8) { top: 90%; left: 20%; animation-delay: 2.5s; }
+
+        @keyframes floatDot {
+            0%, 100% {
+                transform: translateY(0) scale(1);
+                opacity: 0.3;
+            }
+            50% {
+                transform: translateY(-30px) scale(1.2);
+                opacity: 0.6;
+            }
+        }
+
+        /* Hearts decoration for final screen */
+        .hearts {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            display: none;
+        }
+
+        .hearts.active {
+            display: block;
+        }
+
+        .heart {
+            position: absolute;
+            font-size: 20px;
+            color: rgba(255, 105, 180, 0.7);
+            filter: drop-shadow(0 0 10px rgba(255, 20, 147, 0.6));
+            animation: heartFloat 4s ease-in-out infinite;
+        }
+
+        .heart:nth-child(1) { top: 15%; left: 10%; animation-delay: 0s; font-size: 25px; }
+        .heart:nth-child(2) { top: 25%; left: 85%; animation-delay: 0.5s; }
+        .heart:nth-child(3) { top: 55%; left: 8%; animation-delay: 1s; font-size: 30px; }
+        .heart:nth-child(4) { top: 65%; left: 90%; animation-delay: 1.5s; font-size: 22px; }
+        .heart:nth-child(5) { top: 35%; left: 5%; animation-delay: 2s; }
+        .heart:nth-child(6) { top: 75%; left: 75%; animation-delay: 2.5s; font-size: 28px; }
+        .heart:nth-child(7) { top: 45%; left: 92%; animation-delay: 3s; }
+        .heart:nth-child(8) { top: 85%; left: 25%; animation-delay: 3.5s; font-size: 24px; }
+
+        @keyframes heartFloat {
+            0%, 100% {
+                transform: translateY(0) scale(1) rotate(0deg);
+                opacity: 0.4;
+            }
+            50% {
+                transform: translateY(-20px) scale(1.1) rotate(10deg);
+                opacity: 0.8;
+            }
+        }
+
+        .restart-btn {
+            margin-top: 30px;
+            padding: 12px 30px;
+            font-size: 0.9rem;
+            background: linear-gradient(135deg, rgba(255, 182, 193, 0.3), rgba(255, 105, 180, 0.3));
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 2px solid rgba(255, 255, 255, 0.4);
+        }
+
+        .error-msg {
+            color: #ff6b6b;
+            font-size: 0.9rem;
+            margin-top: 15px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .error-msg.show {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <!-- Decorative Dots -->
+    <div class="decorative-dots">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+    </div>
+
+    <!-- Hearts for final screen -->
+    <div class="hearts" id="hearts">
+        <div class="heart">❤</div>
+        <div class="heart">❤</div>
+        <div class="heart">❤</div>
+        <div class="heart">❤</div>
+        <div class="heart">❤</div>
+        <div class="heart">❤</div>
+        <div class="heart">❤</div>
+        <div class="heart">❤</div>
+    </div>
+
+    <div class="container">
+        <!-- Screen 1: Name Input -->
+        <div class="screen active" id="screen1">
+            <h1 class="title">✨ Enter Your Name ✨</h1>
+            <div class="input-container">
+                <input type="text" class="name-input" id="nameInput" placeholder="Your beautiful name..." maxlength="30">
+                <p class="error-msg" id="errorMsg">Please enter your name! 💕</p>
+            </div>
+            <button class="btn" onclick="goToScreen(2)">Next →</button>
+        </div>
+
+        <!-- Screen 2: Happy Bhogi -->
+        <div class="screen" id="screen2">
+            <div class="text-3d-container">
+                <div class="text-3d bhogi">🪔 HAPPY BHOGI 🪔</div>
+            </div>
+            <button class="btn" onclick="goToScreen(3)">Next →</button>
+        </div>
+
+        <!-- Screen 3: Happy Makara Sankranti -->
+        <div class="screen" id="screen3">
+            <div class="text-3d-container">
+                <div class="text-3d sankranti">🪁 HAPPY MAKARA<br>SAKRANTHI 🪁</div>
+            </div>
+            <button class="btn" onclick="goToScreen(4)">Next →</button>
+        </div>
+
+        <!-- Screen 4: Happy Kanuma -->
+        <div class="screen" id="screen4">
+            <div class="text-3d-container">
+                <div class="text-3d kanuma">🐄 HAPPY KANUMA 🐄</div>
+            </div>
+            <button class="btn" onclick="goToScreen(5)">Next →</button>
+        </div>
+
+        <!-- Screen 5: Final -->
+        <div class="screen" id="screen5">
+            <h2 class="title" style="animation: fadeInDown 1s ease;">💖 Special For You 💖</h2>
+            <div class="final-name-container">
+                <div class="glass-name" id="displayName"></div>
+            </div>
+            <div class="quote-container">
+                <p class="quote" style="position: relative;">
+                    You are the sunshine that brightens my darkest days and the love that makes my heart dance. Every moment with you feels like a beautiful festival, and I fall more in love with you with each passing day. You are not just my love, you are my celebration, my happiness, my everything. 💕
+                </p>
+            </div>
+            <button class="btn restart-btn" onclick="restart()">🔄 Send Another</button>
+        </div>
+    </div>
+
+    <script>
+        let userName = '';
+
+        function goToScreen(screenNum) {
+            // For screen 1, validate input first
+            if (screenNum === 2) {
+                const nameInput = document.getElementById('nameInput');
+                const errorMsg = document.getElementById('errorMsg');
+                userName = nameInput.value.trim();
+                
+                if (!userName) {
+                    errorMsg.classList.add('show');
+                    nameInput.style.border = '2px solid #ff6b6b';
+                    return;
+                }
+                
+                errorMsg.classList.remove('show');
+                nameInput.style.border = 'none';
+            }
+
+            // Hide all screens
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.remove('active');
+            });
+
+            // Show target screen with small delay for animation
+            setTimeout(() => {
+                const targetScreen = document.getElementById('screen' + screenNum);
+                targetScreen.classList.add('active');
+
+                // For final screen
+                if (screenNum === 5) {
+                    document.getElementById('displayName').textContent = userName;
+                    document.getElementById('hearts').classList.add('active');
+                }
+            }, 100);
+        }
+
+        function restart() {
+            // Reset everything
+            document.getElementById('nameInput').value = '';
+            document.getElementById('hearts').classList.remove('active');
+            
+            // Hide all screens
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.remove('active');
+            });
+
+            // Show screen 1
+            setTimeout(() => {
+                document.getElementById('screen1').classList.add('active');
+            }, 100);
+        }
+
+        // Allow Enter key to proceed from input
+        document.getElementById('nameInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                goToScreen(2);
+            }
+        });
+
+        // Remove error styling on input
+        document.getElementById('nameInput').addEventListener('input', function() {
+            document.getElementById('errorMsg').classList.remove('show');
+            this.style.border = 'none';
+        });
+    </script>
+</body>
+</html>
